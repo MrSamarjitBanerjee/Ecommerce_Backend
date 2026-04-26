@@ -1,0 +1,1284 @@
+{
+  "info": {
+    "_postman_id": "f0e38912-6a2b-453c-a180-c0e113554c20",
+    "name": "E-Commerce API",
+    "description": "Complete Postman collection for E-Commerce REST API. Base URL: [http://localhost:3001](http://localhost:3001). All authenticated endpoints require Bearer token in Authorization header. Import this file into Postman and set the collection variables before testing.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32383360"
+  },
+  "item": [
+    {
+      "name": "01 - Health & Server",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}",
+              "host": [
+                "{{base_url}}"
+              ]
+            },
+            "description": "Check if server is running. Returns: { message: 'Server is Running' }"
+          },
+          "response": []
+        }
+      ],
+      "description": "_Check Server Runnning or not!_"
+    },
+    {
+      "name": "02 - User Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "register"
+              ]
+            },
+            "description": "Register a new user. Required: name, email, password. Returns 409 if user already exists."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWVkYjhhYjdmMjdkNzM4MzM3NjcxOTAiLCJpYXQiOjE3NzcxODcwODMsImV4cCI6MTc3NzI3MzQ4M30.ZHfr4FOxx9L02fkiJy1qRfCWzq-TB7QqTO8lks9lpqQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/user/verify-user?code=69edbacf3f561414221ad056",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "verify-user"
+              ],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "69edbacf3f561414221ad056",
+                  "description": "MongoDB _id of the user received from registration"
+                }
+              ]
+            },
+            "description": "Verify user email using the code sent via email. Query param: code (user _id)."
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWVjY2YzYmM4NDAyYTVhMWUwYjhhNjAiLCJpYXQiOjE3NzcxMjc1NDYsImV4cCI6MTc3NzIxMzk0Nn0.rrA02TddG4-CqEXp-PvYze7HfXyrqiVWzRbgpeo9XQw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"SecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "login"
+              ]
+            },
+            "description": "Login user. Required: email, password. Returns accessToken and refreshToken in response and cookies."
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWVjY2YzYmM4NDAyYTVhMWUwYjhhNjAiLCJpYXQiOjE3NzcxMjc0MTEsImV4cCI6MTc3NzIxMzgxMX0.6tTIpICJWQUZjJtXjX1I7pM0ZpLqnCMfwNtY2b4xn20",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "logout"
+              ]
+            },
+            "description": "Logout authenticated user. Clears cookies and refresh token. Requires auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Access Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{refresh_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/user/refresh-token",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "refresh-token"
+              ]
+            },
+            "description": "Generate new access token using refresh token. Pass refresh token in Authorization header or as cookie."
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWVjY2YzYmM4NDAyYTVhMWUwYjhhNjAiLCJpYXQiOjE3NzcxMjgzNjAsImV4cCI6MTc3NzIxNDc2MH0.B6gWaV812xxvwqCsQ_vWDBqQBoUhhCa0DO9Ev8wpIV4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/forget-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "forget-password"
+              ]
+            },
+            "description": "Request password reset OTP. Sends OTP to user's email. Check server console for OTP in development."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Forgot Password OTP",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"otp\": \"795683\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/verify-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "verify-otp"
+              ]
+            },
+            "description": "Verify OTP received via email. Returns resetToken on success. Also sets resetToken cookie."
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Cookie",
+                "value": "resetToken={{reset_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\",\n  \"newPassword\": \"NewSecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/reset-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "reset-password"
+              ]
+            },
+            "description": "Reset password after OTP verification. Requires resetToken cookie and email in body."
+          },
+          "response": []
+        }
+      ],
+      "description": "_authentication system routes_"
+    },
+    {
+      "name": "03 - User Profile",
+      "item": [
+        {
+          "name": "Upload Avatar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": "/path/to/avatar.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/upload-avatar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "upload-avatar"
+              ]
+            },
+            "description": "Upload user avatar image. Requires auth. Form field: avatar (file). Update src path to your local image file."
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"johnupdated@example.com\",\n  \"mobile\": 9876543210,\n  \"password\": \"NewPass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/update-user",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "update-user"
+              ]
+            },
+            "description": "Update user profile. Optional fields: name, email, mobile, password. Requires auth."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Category",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Electronics\",\n  \"image\": \"https://example.com/electronics.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/category/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "create"
+              ]
+            },
+            "description": "Create a new category. Admin only. Required: name, image."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "all"
+              ]
+            },
+            "description": "Get all categories. Public route. No auth required."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/category/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "{{category_id}}"
+              ]
+            },
+            "description": "Get single category by ID. Public route."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Electronics\",\n  \"image\": \"https://example.com/updated.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/category/update/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "update",
+                "{{category_id}}"
+              ]
+            },
+            "description": "Update category by ID. Admin only. At least one field required."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/category/delete/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "category",
+                "delete",
+                "{{category_id}}"
+              ]
+            },
+            "description": "Delete category by ID. Admin only."
+          },
+          "response": []
+        }
+      ],
+      "description": "Product category CRUD"
+    },
+    {
+      "name": "05 - SubCategory",
+      "item": [
+        {
+          "name": "Create SubCategory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Smartphones\",\n  \"image\": \"https://example.com/smartphones.jpg\",\n  \"category\": [\"{{category_id}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "create"
+              ]
+            },
+            "description": "Create a new subcategory. Admin only. Required: name, image, category (array of category IDs)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All SubCategories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "all"
+              ]
+            },
+            "description": "Get all subcategories. Public route."
+          },
+          "response": []
+        },
+        {
+          "name": "Get SubCategory by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/{{subcategory_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "{{subcategory_id}}"
+              ]
+            },
+            "description": "Get single subcategory by ID. Public route."
+          },
+          "response": []
+        },
+        {
+          "name": "Get SubCategories by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/category/{{category_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "category",
+                "{{category_id}}"
+              ]
+            },
+            "description": "Get all subcategories belonging to a specific category. Public route."
+          },
+          "response": []
+        },
+        {
+          "name": "Update SubCategory",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Smartphones\",\n  \"image\": \"https://example.com/updated.jpg\",\n  \"category\": [\"{{category_id}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/update/{{subcategory_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "update",
+                "{{subcategory_id}}"
+              ]
+            },
+            "description": "Update subcategory by ID. Admin only."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete SubCategory",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/subcategory/delete/{{subcategory_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "subcategory",
+                "delete",
+                "{{subcategory_id}}"
+              ]
+            },
+            "description": "Delete subcategory by ID. Admin only."
+          },
+          "response": []
+        }
+      ],
+      "description": "_Product Subcategory CRUD_"
+    },
+    {
+      "name": "06 - Product",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"iPhone 15 Pro\",\n  \"image\": [\"https://example.com/iphone1.jpg\", \"https://example.com/iphone2.jpg\"],\n  \"category\": [\"{{category_id}}\"],\n  \"subCategory\": [\"{{subcategory_id}}\"],\n  \"unit\": \"piece\",\n  \"stock\": 50,\n  \"price\": 999.99,\n  \"discount\": 10,\n  \"description\": \"Latest iPhone with titanium design\",\n  \"more_details\": {\n    \"color\": \"Natural Titanium\",\n    \"storage\": \"256GB\"\n  },\n  \"publish\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/product/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "create"
+              ]
+            },
+            "description": "Create a new product. Admin only. Required: name, image (array), category (array), subCategory (array), price."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/product/all?page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all published products with pagination. Public route. Query params: page, limit, search."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/product/search?search=iPhone&page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "iPhone"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search products by text. Public route. Query params: search (required), page, limit."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/product/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Get single product by ID. Public route. Only published products returned."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 899.99,\n  \"stock\": 45,\n  \"discount\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/product/update/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "update",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Update product by ID. Admin only. Partial update supported."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/product/delete/{{product_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "product",
+                "delete",
+                "{{product_id}}"
+              ]
+            },
+            "description": "Delete product by ID. Admin only."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 - Cart",
+      "item": [
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{product_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cart/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "add"
+              ]
+            },
+            "description": "Add product to cart. Requires auth. Body: productId. Returns 409 if already in cart."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                ""
+              ]
+            },
+            "description": "Get all items in user's cart with totals. Requires auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Cart Count",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/count",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "count"
+              ]
+            },
+            "description": "Get total number of items in cart. Requires auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cart/update/{{cart_item_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "update",
+                "{{cart_item_id}}"
+              ]
+            },
+            "description": "Update quantity of a cart item. Requires auth. Body: quantity (min 1)."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/remove/{{cart_item_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "remove",
+                "{{cart_item_id}}"
+              ]
+            },
+            "description": "Remove specific item from cart. Requires auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cart/clear",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cart",
+                "clear"
+              ]
+            },
+            "description": "Clear all items from cart. Requires auth."
+          },
+          "response": []
+        }
+      ],
+      "description": "_cart system CRUD_"
+    },
+    {
+      "name": "08 - Address",
+      "item": [
+        {
+          "name": "Add Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address_line\": \"123 Main Street, Apt 4B\",\n  \"city\": \"Mumbai\",\n  \"state\": \"Maharashtra\",\n  \"pincode\": \"400001\",\n  \"country\": \"India\",\n  \"mobile\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/address/add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "address",
+                "add"
+              ]
+            },
+            "description": "Add new address for logged-in user. Requires auth. Pincode: 6 digits, Mobile: 10 digits."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"city\": \"Delhi\",\n  \"state\": \"Delhi\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/address/update/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "address",
+                "update",
+                "{{address_id}}"
+              ]
+            },
+            "description": "Update address by ID. Requires auth. At least one field required."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/address/delete/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "address",
+                "delete",
+                "{{address_id}}"
+              ]
+            },
+            "description": "Delete address by ID. Requires auth."
+          },
+          "response": []
+        },
+        {
+          "name": "Set Default Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/address/set-default/{{address_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "address",
+                "set-default",
+                "{{address_id}}"
+              ]
+            },
+            "description": "Set an address as default. Requires auth. Sets all other addresses to non-default."
+          },
+          "response": []
+        }
+      ],
+      "description": "_user's address providing CRUD_"
+    },
+    {
+      "name": "09 - Upload",
+      "item": [
+        {
+          "name": "Upload Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/path/to/image.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "image"
+              ]
+            },
+            "description": "Upload image to Cloudinary. Requires auth. Form field: image (file). Update src path to your local image file."
+          },
+          "response": []
+        }
+      ],
+      "description": "_Test Image Upload_"
+    },
+    {
+      "name": "ADMIN",
+      "item": [
+        {
+          "name": "Make Admin",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"johndoe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user/make-admin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "make-admin"
+              ]
+            },
+            "description": "Promote a users role from \"USER\" to \"ADMIN\"  \n(only an Admin can promote a normal user to ADMIN) - access token must be of an admin"
+          },
+          "response": []
+        }
+      ],
+      "description": "_make admin route_"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reset_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "subcategory_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cart_item_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "address_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
