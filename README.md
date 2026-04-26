@@ -108,6 +108,9 @@ http://localhost:3001/api
 | POST | `/image` | Uploads an image to Cloudinary | Admin only |
 
 ---
+## IMPORT FULL POSTMAN (all Routes) 
+| import this file => E-Commerce full API.postman_collection , to postman to see full collection of Endpoints |
+----
 
 ## How the System Works (The Thinking Behind It)
 
