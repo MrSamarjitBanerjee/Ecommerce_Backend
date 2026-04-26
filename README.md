@@ -13,7 +13,7 @@
 
 # Ecommerce Backend
 
-This is the backend for an E-Commerce app built with Node.js and Express. I made this project to get a solid grip on how real-world backend systems work things like secure login flows, role-based access, cart logic, and handling images. The API is RESTful, returns consistent JSON responses, and is structured so it's easy to hook up to any frontend later.
+This is the backend for an E-Commerce app built with Node.js and Express. I made this project to get a solid grip on how real-world backend systems work things like MVC Architecture , jwt authentication ,secure login flows , role-based access, cart logic, and handling images. The API is RESTful, returns consistent JSON responses, and is structured so it's easy to hook up to any frontend later.
 
 ---
 
