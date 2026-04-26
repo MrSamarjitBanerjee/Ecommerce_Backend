@@ -1,8 +1,20 @@
+
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0f2027,50:203a43,100:2c5364&height=200&section=header&text=E-Commerce%20Backend%20API&fontSize=35&fontColor=ffffff&animation=fadeIn" />
 </p>
 
 
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
+</p>
+
+<p align="center">
+  🍃 Mongoose &nbsp; | &nbsp; 🔑 JWT &nbsp; | &nbsp; 🔒 bcryptjs  
+  <br/>
+  ☁️ Cloudinary &nbsp; | &nbsp; 📦 Multer &nbsp; | &nbsp; ✉️ Resend  
+  <br/>
+  🛡️ Helmet &nbsp; | &nbsp; 🌐 CORS &nbsp; | &nbsp; 🍪 Cookie-Parser &nbsp; | &nbsp; 📊 Morgan
+</p>
 
 
 
