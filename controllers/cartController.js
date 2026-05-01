@@ -1,6 +1,7 @@
 const CartProductModel = require('../models/cartproductModel')
 const ProductModel = require('../models/productModel')
 const mongoose = require('mongoose')
+const { getRedisClient } = require('../config/redisConfig')
 
 // Add product to cart
 exports.addToCartController = async (req, res) => {
@@ -65,6 +66,17 @@ exports.addToCartController = async (req, res) => {
 
         await cartProduct.populate('productId')
 
+        // Invalidating cart cache
+        const redis = getRedisClient()
+        if (redis) {
+            try {
+                await redis.del(`cart_${userId}`)
+                await redis.del(`cartCount_${userId}`)
+            } catch (cacheError) {
+                console.log('Cache invalidation error:', cacheError)
+            }
+        }
+
         return res.status(201).json({
             message: "Product added to cart",
             data: cartProduct,
@@ -94,6 +106,21 @@ exports.getCartController = async (req, res) => {
             })
         }
 
+        // Check Redis cache first
+        const redis = getRedisClient()
+        const cacheKey = `cart_${userId}`
+        
+        if (redis) {
+            try {
+                const cachedCart = await redis.get(cacheKey)
+                if (cachedCart) {
+                    return res.status(200).json(JSON.parse(cachedCart))
+                }
+            } catch (cacheError) {
+                console.log('Cache retrieval error:', cacheError)
+            }
+        }
+
         const cartItems = await CartProductModel.find({ userId })
             .populate({
                 path: 'productId',
@@ -117,7 +144,7 @@ exports.getCartController = async (req, res) => {
             }
         })
 
-        return res.status(200).json({
+        const responseData = {
             message: "Cart items fetched",
             data: cartItems,
             summary: {
@@ -128,7 +155,18 @@ exports.getCartController = async (req, res) => {
             },
             success: true,
             error: false
-        })
+        }
+
+        // Storing in Redis cache with 1 hour TTL time
+        if (redis) {
+            try {
+                await redis.setEx(cacheKey, 3600, JSON.stringify(responseData))
+            } catch (cacheError) {
+                console.log('Cache storage error:', cacheError)
+            }
+        }
+
+        return res.status(200).json(responseData)
 
     } catch (error) {
         return res.status(500).json({
@@ -179,7 +217,7 @@ exports.updateCartQuantityController = async (req, res) => {
             })
         }
 
-        // Verify cart item exists and belongs to user
+        // Verifying if cart item exists and belongs to user
         const cartItem = await CartProductModel.findOne({
             _id: cartItemId,
             userId
@@ -207,6 +245,16 @@ exports.updateCartQuantityController = async (req, res) => {
             { quantity: quantityNum },
             { new: true }
         ).populate('productId')
+
+        // Invalidate cart cache
+        const redis = getRedisClient()
+        if (redis) {
+            try {
+                await redis.del(`cart_${userId}`)
+            } catch (cacheError) {
+                console.log('Cache invalidation error:', cacheError)
+            }
+        }
 
         return res.status(200).json({
             message: "Cart quantity updated",
@@ -259,6 +307,17 @@ exports.removeFromCartController = async (req, res) => {
             })
         }
 
+        // Invalidating cart cache
+        const redis = getRedisClient()
+        if (redis) {
+            try {
+                await redis.del(`cart_${userId}`)
+                await redis.del(`cartCount_${userId}`)
+            } catch (cacheError) {
+                console.log('Cache invalidation error:', cacheError)
+            }
+        }
+
         return res.status(200).json({
             message: "Product removed from cart",
             data: deletedCartItem,
@@ -289,6 +348,17 @@ exports.clearCartController = async (req, res) => {
         }
 
         const result = await CartProductModel.deleteMany({ userId })
+
+        // Invalidating cart cache
+        const redis = getRedisClient()
+        if (redis) {
+            try {
+                await redis.del(`cart_${userId}`)
+                await redis.del(`cartCount_${userId}`)
+            } catch (cacheError) {
+                console.log('Cache invalidation error:', cacheError)
+            }
+        }
 
         return res.status(200).json({
             message: "Cart cleared successfully",
@@ -321,16 +391,42 @@ exports.getCartCountController = async (req, res) => {
             })
         }
 
+        // Checking Redis cache first
+        const redis = getRedisClient()
+        const cacheKey = `cartCount_${userId}`
+
+        if (redis) {
+            try {
+                const cachedCount = await redis.get(cacheKey)
+                if (cachedCount) {
+                    return res.status(200).json(JSON.parse(cachedCount))
+                }
+            } catch (cacheError) {
+                console.log('Cache retrieval error:', cacheError)
+            }
+        }
+
         const count = await CartProductModel.countDocuments({ userId })
 
-        return res.status(200).json({
+        const responseData = {
             message: "Cart count fetched",
             data: {
                 count
             },
             success: true,
             error: false
-        })
+        }
+
+        // Storing in Redis cache with 1 hour TTL time
+        if (redis) {
+            try {
+                await redis.setEx(cacheKey, 3600, JSON.stringify(responseData))
+            } catch (cacheError) {
+                console.log('Cache storage error:', cacheError)
+            }
+        }
+
+        return res.status(200).json(responseData)
 
     } catch (error) {
         return res.status(500).json({

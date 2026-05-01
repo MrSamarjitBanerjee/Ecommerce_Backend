@@ -1,6 +1,7 @@
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const connectDB = require('./config/connectDB')
+const { connectRedis } = require('./config/redisConfig')
 const seedDefaultAdmin = require('./utils/seedAdmin')
 const morgan = require('morgan') 
 const helmet  = require('helmet') 
@@ -30,6 +31,11 @@ app.use(helmet({
 }))
 connectDB().then(() => {
     seedDefaultAdmin()
+})
+
+// Initializing Redis
+connectRedis().catch(err => {
+    console.log('Failed to initialize Redis:', err)
 })
 
 const PORT = process.env.PORT || 3001
