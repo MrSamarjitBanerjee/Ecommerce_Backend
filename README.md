@@ -25,7 +25,9 @@
 
 # Ecommerce Backend
 
-This is the backend for an E-Commerce app built with Node.js and Express. I made this project to get a solid grip on how real-world backend systems work things like MVC Architecture , jwt authentication ,secure login flows , role-based access, cart logic, and handling images. The API is RESTful, returns consistent JSON responses, and is structured so it's easy to hook up to any frontend later.
+This project is a scalable monolithic backend for an e-commerce application built using Node.js, Express.js, and MongoDB. It includes authentication, product management, cart handling with Redis caching, and secure session management using JWT.
+
+The backend is deployed on Amazon EC2 with PM2 cluster mode for process management and performance optimization.
 
 ---
 
@@ -121,10 +123,134 @@ http://localhost:3001/api
 
 ---
 ## IMPORT FULL POSTMAN (all Routes) 
-| import this file => E-Commerce full API.postman_collection , to postman to see full collection of Endpoints |
+| Import file : *API.postman_collection*  to postman to see full collection of Endpoints |
 ----
 
-## How the System Works (The Thinking Behind It)
+# 🚀 Deployment (AWS EC2)
+
+## 📌 Overview
+
+The backend is deployed on **Amazon EC2** using Ubuntu Server. Redis is hosted locally on the instance, while the database is managed via **MongoDB Atlas**. The application is managed using **PM2** in cluster mode for better performance and reliability(Vertical Scaling).
+
+---
+
+## ⚙️ Steps
+
+### 1. Launch EC2 Instance
+
+* Ubuntu Server (22.04 / 24.04, x86)
+* Instance type: t2.micro/t3.micro (free tier)
+* Configure security group:
+
+  * Port 22 (SSH)
+  * Port 3000/3001 (API)
+
+---
+
+### 2. Connect to Instance
+
+```bash
+ssh -i key.pem ubuntu@PUBLIC_IP
+```
+
+---
+
+### 3. Install Dependencies
+
+```bash
+sudo apt update && sudo apt upgrade -y
+
+# Node.js (v20)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Git & Redis
+sudo apt install git redis-server -y
+```
+
+---
+
+### 4. Setup Redis
+
+```bash
+sudo systemctl start redis-server
+sudo systemctl enable redis-server
+```
+
+---
+
+### 5. Clone & Setup Project
+
+```bash
+git clone <repo-url>
+cd <project-folder>
+npm install
+```
+
+Create `.env` file with required variables (MongoDB URI, JWT secrets, Redis config).
+
+---
+
+### 6. Run Application with PM2 (Cluster Mode)
+
+```bash
+npm install -g pm2
+
+pm2 start index.js -i max --name ecommerce-api
+pm2 save
+pm2 startup
+```
+
+---
+
+### 7. Auto Start on Reboot
+
+* Redis → managed via systemd
+* Application → managed via PM2
+
+Both services automatically restart when the EC2 instance starts.
+
+📊 *Load Testing*
+
+Load testing was performed using Loader.io to evaluate performance under concurrent traffic.
+
+LOAD TEST REPORT - https://loader.io/reports/fc64ba9cd85dea64c7e686a5e6eddb7a/results/83739fc501d234e268fd0a3d2ba5bef3
+
+<img width="1536" height="868" alt="loadtestEcomImg" src="https://github.com/user-attachments/assets/cf4cdd2d-3c45-4b46-95da-c7b92ceefc6b" />
+
+
+
+🔹 Test Configuration
+Test Type: Clients per Test
+Concurrent Users: 250
+Duration: 1 minute
+🔹 Results
+Average Response Time: ~114 ms
+Max Response Time: 226 ms
+Error Rate: 0%
+Timeouts: 0
+🔹 Observations
+Stable response time under concurrent load
+No failures or timeouts observed
+Redis caching helped reduce database load and improve latency
+
+# IMAGES OF DEPLOYMENT
+<img width="1206" height="484" alt="ec2ecommerceimg" src="https://github.com/user-attachments/assets/019ed479-a1f8-408a-8567-410efa4ce5b2" />
+<img width="1270" height="670" alt="ec2awsimg" src="https://github.com/user-attachments/assets/5d05bb18-7205-4374-840e-a462daac5e24" />
+<img width="1872" height="771" alt="ecmimg" src="https://github.com/user-attachments/assets/dd903fd3-e54c-458a-8aa4-9c64bc2f97c8" />
+<img width="1918" height="1063" alt="redis_eccomerce" src="https://github.com/user-attachments/assets/8c9166cd-e34e-4ed2-90a7-dab3f619e1a6" />
+
+
+
+
+
+---
+
+## ⚠️ Notes
+* Ensure ports are open in security group
+
+
+## How the Backend System Works (The Thinking Behind It)
 
 **Two-layer login:** I used short-lived access tokens and long-lived refresh tokens stored in `httpOnly` cookies. This way even if someone sniffs the access token, it expires quickly, and the refresh token is never exposed to JavaScript.
 
@@ -160,4 +286,4 @@ Server starts at `http://localhost:3001`
 
 **Samarjit Banerjee**
 
-Built this to understand how real E-Commerce backends handle auth, roles, inventory, and user data.
+Built this to understand how real E-Commerce backends handle auth, roles, inventory, and user data, and Deployment using AWS EC2.
