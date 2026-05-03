@@ -240,7 +240,11 @@ Redis caching helped reduce database load and improve latency
 <img width="1206" height="484" alt="ec2ecommerceimg" src="https://github.com/user-attachments/assets/019ed479-a1f8-408a-8567-410efa4ce5b2" />
 <img width="1270" height="670" alt="ec2awsimg" src="https://github.com/user-attachments/assets/5d05bb18-7205-4374-840e-a462daac5e24" />
 <img width="1872" height="771" alt="ecmimg" src="https://github.com/user-attachments/assets/dd903fd3-e54c-458a-8aa4-9c64bc2f97c8" />
+<img width="1720" height="622" alt="redisawsimg" src="https://github.com/user-attachments/assets/16aaa787-e1d4-4765-8eeb-592747537d23" />
 <img width="1918" height="1063" alt="redis_eccomerce" src="https://github.com/user-attachments/assets/8c9166cd-e34e-4ed2-90a7-dab3f619e1a6" />
+<img width="1915" height="279" alt="pm2LISTimg" src="https://github.com/user-attachments/assets/60588291-9058-40ac-8652-0d1363e8b7be" />
+<img width="1912" height="970" alt="pm2monitorIMG" src="https://github.com/user-attachments/assets/1c6427dd-9706-454b-bf80-2c2da726a829" />
+
 
 
 
