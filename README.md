@@ -13,9 +13,9 @@
   <br/>
   ☁️ Cloudinary &nbsp; | &nbsp; 📦 Multer &nbsp; | &nbsp; ✉️ Resend
   <br/>
-      ☁️ AWS EC2 &nbsp; | &nbsp; ⚡ Redis &nbsp; | &nbsp; 🗄️ MongoDB Atlas
+      ☁️ AWS EC2 &nbsp; | &nbsp; ⚡ Redis &nbsp; | &nbsp; 🗄️ MongoDB Atlas |  ⚙️ PM2 Cluster &nbsp; 
   <br/>
-  🛡️ Helmet &nbsp; | &nbsp; 🌐 CORS &nbsp; | &nbsp; 🍪 Cookie-Parser &nbsp; | &nbsp; 📊 Morgan
+  🛡️ Helmet &nbsp; | &nbsp; 🌐 CORS &nbsp; | &nbsp; 🍪 Cookie-Parser &nbsp; | &nbsp; 📊 Morgan | &nbsp; 🚀 Backend API
 </p>
 
 
