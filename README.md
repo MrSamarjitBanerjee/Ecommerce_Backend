@@ -11,7 +11,9 @@
 <p align="center">
   🍃 Mongoose &nbsp; | &nbsp; 🔑 JWT &nbsp; | &nbsp; 🔒 bcryptjs  
   <br/>
-  ☁️ Cloudinary &nbsp; | &nbsp; 📦 Multer &nbsp; | &nbsp; ✉️ Resend  
+  ☁️ Cloudinary &nbsp; | &nbsp; 📦 Multer &nbsp; | &nbsp; ✉️ Resend
+  <br/>
+      ☁️ AWS EC2 &nbsp; | &nbsp; ⚡ Redis &nbsp; | &nbsp; 🗄️ MongoDB Atlas
   <br/>
   🛡️ Helmet &nbsp; | &nbsp; 🌐 CORS &nbsp; | &nbsp; 🍪 Cookie-Parser &nbsp; | &nbsp; 📊 Morgan
 </p>
